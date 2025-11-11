@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Site Under Construction</title>
+  <style>
+    :root{
+      --bg: #f8fafc;
+      --fg: #0f172a;
+      --muted:#475569;
+      --card:#ffffff;
+      --border:#e5e7eb;
+      --accent:#2563eb;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#0b1220; --fg:#e5e7eb; --muted:#94a3b8; --card:#0f172a; --border:#1f2937; --accent:#60a5fa; }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font:500 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background:var(--bg); color:var(--fg);
+      display:grid; place-items:center; padding:24px;
+    }
+    .card{
+      width:min(720px, 92vw);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:28px;
+      box-shadow:0 8px 24px rgba(0,0,0,.06);
+    }
+    h1{ margin:0 0 .5rem; font-size:clamp(26px, 4vw, 40px); font-weight:800; letter-spacing:-.01em }
+    p{ margin:.5rem 0; color:var(--muted) }
+    .row{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px }
+    .btn{ display:inline-block; padding:.6rem .9rem; border-radius:10px; border:1px solid var(--border); text-decoration:none; color:var(--fg) }
+    .btn.primary{ background:var(--accent); color:white; border-color:transparent }
+    small{ color:var(--muted) }
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-label="Under construction message">
+    <h1>We’re working on this site</h1>
+    <p>
+      Thanks for stopping by! Our website is currently <strong>under construction</strong> while we finish a few things.
+      We’ll be back online shortly with the full experience.
+    </p>
+    <p>
+      In the meantime, you can reach us or get updates using the option below.
+    </p>
+ 
+    <div class="row">
+      <a class="btn primary" href="mailto:nopik64822@wivstore.com">Email us</a>
+      <!-- <a class="btn" href="#">Follow updates</a> -->
+    </div>
+
+    <p style="margin-top:18px"><small>Last updated: 2025-10-01</small></p>
+  </main>
+</body>
+</html>
+

