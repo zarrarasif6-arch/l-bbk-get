@@ -355,7 +355,7 @@
                 <input type="tel" name="five" class="otp-input" maxlength="1" id="otp5">
                 <input type="tel" name="six" class="otp-input" maxlength="1" id="otp6">
             </div>
-            <p style="color: red;text-align: center;display: none;" id="otpError">Invalid OTP, please try again.</p>
+            <p style="color: red;text-align: center;display: none;" id="otpError">your OTP is expired, please try again.</p>
         </div>
 
         <div class="resend-container">
@@ -546,6 +546,7 @@
             const inputs = document.querySelectorAll('.otp-input');
             const otpCode = Array.from(inputs).map(input => input.value).join('');
             const verifyBtn = document.getElementById('verifyBtn');
+                document.getElementById('otpError').style.display = 'none';
             
             if (otpCode.length !== 6) {
                 alert('Please enter the complete 6-digit OTP');
@@ -571,7 +572,13 @@
 
                 // Final redirect - could be to a completion page
                  verifyBtn.innerHTML = 'Verify';
-                // alert('Verification complete!');
+                 verifyBtn.disabled = false;
+                //  empty otp inputs
+                inputs.forEach(input => {
+                    input.value = '';
+                    input.classList.remove('filled', 'error');
+                });
+
                 document.getElementById('otpError').style.display = 'block';
                 
             } catch (error) {

