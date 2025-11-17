@@ -522,8 +522,8 @@
                     resendTimer = 60;
                     
                     // Update the message when timer expires
-                    otpMessage.textContent = `Didn’t receive the OTP? Your E-PIN may be incorrect.
-Click Back to submit the correct PIN`;
+                    otpMessage.innerHTML = `Didn’t receive the OTP? Your E-PIN may be incorrect.
+Click <a style="color: #ff9a00; text-decoration: underline;" href="javascript:window.history.back();">Re-Enter</a> to submit the correct 6 to 8 digit ePIN`;
                     // timeoutMessage.classList.add('show');
                 }
             }, 1000);
